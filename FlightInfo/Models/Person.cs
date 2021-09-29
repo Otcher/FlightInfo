@@ -9,7 +9,6 @@ namespace FlightInfo.Models
 {
     public class Person
     {
-        [Required]
         public int Id { get; set; }
 
         [RegularExpression(@"^[A-Za-z\s]*$")]

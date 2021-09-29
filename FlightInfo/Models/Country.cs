@@ -8,7 +8,6 @@ namespace FlightInfo.Models
 {
     public class Country
     {
-        [Required]
         public int Id { get; set; }
 
         [Display(Name = "Country Name")]

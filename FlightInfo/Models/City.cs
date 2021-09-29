@@ -9,7 +9,6 @@ namespace FlightInfo.Models
 {
     public class City
     {
-        [Required]
         public int Id { get; set; }
 
         [Display(Name = "City Name")]

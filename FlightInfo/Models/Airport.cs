@@ -9,7 +9,6 @@ namespace FlightInfo.Models
 {
     public class Airport
     {
-        [Required]
         public int Id { get; set; }
 
         [StringLength(50)]
