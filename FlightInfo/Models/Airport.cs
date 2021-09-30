@@ -17,8 +17,7 @@ namespace FlightInfo.Models
         [Display(Name = "Airport Name")]
         public string Name { get; set; }
 
-        [ForeignKey("City")]
-        public int CityId { get; set; }
+        public City City { get; set; }
 
         public IEnumerable<Flight> FlightTable { get; set; }
 
