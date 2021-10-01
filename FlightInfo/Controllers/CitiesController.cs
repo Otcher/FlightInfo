@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,7 +23,8 @@ namespace FlightInfo.Controllers
         // GET: Cities
         public async Task<IActionResult> Index()
         {
-            return View(await _context.City.ToListAsync());
+            var cities =  _context.City.Include(c => c.Country);
+            return View(await cities.ToListAsync());
         }
 
         // GET: Cities/Details/5
@@ -34,6 +36,7 @@ namespace FlightInfo.Controllers
             }
 
             var city = await _context.City
+                .Include(c => c.Country)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (city == null)
             {
