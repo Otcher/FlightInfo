@@ -15,8 +15,5 @@ namespace FlightInfo.Models
         public string Name { get; set; }
 
         public Country Country { get; set; }
-
-        [ForeignKey("Airport")]
-        public int AirportId { get; set; }
     }
 }

@@ -3,26 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FlightInfo.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Airport",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: false),
-                    Longtitude = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Airport", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Country",
                 columns: table => new
@@ -59,8 +43,7 @@ namespace FlightInfo.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CountryId = table.Column<int>(type: "int", nullable: true),
-                    AirportId = table.Column<int>(type: "int", nullable: false)
+                    CountryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,14 +80,36 @@ namespace FlightInfo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Airport",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CityId = table.Column<int>(type: "int", nullable: true),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longtitude = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Airport", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Airport_City_CityId",
+                        column: x => x.CityId,
+                        principalTable: "City",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Flight",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FlightNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OriginAirportId = table.Column<int>(type: "int", nullable: false),
-                    DestinationAirportId = table.Column<int>(type: "int", nullable: false),
+                    OriginId = table.Column<int>(type: "int", nullable: true),
+                    DestinationId = table.Column<int>(type: "int", nullable: true),
                     PilotId = table.Column<int>(type: "int", nullable: true),
                     DepartureTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PlaneId = table.Column<int>(type: "int", nullable: true),
@@ -116,6 +121,18 @@ namespace FlightInfo.Migrations
                     table.ForeignKey(
                         name: "FK_Flight_Airport_AirportId",
                         column: x => x.AirportId,
+                        principalTable: "Airport",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Flight_Airport_DestinationId",
+                        column: x => x.DestinationId,
+                        principalTable: "Airport",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Flight_Airport_OriginId",
+                        column: x => x.OriginId,
                         principalTable: "Airport",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -158,6 +175,11 @@ namespace FlightInfo.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Airport_CityId",
+                table: "Airport",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_City_CountryId",
                 table: "City",
                 column: "CountryId");
@@ -166,6 +188,16 @@ namespace FlightInfo.Migrations
                 name: "IX_Flight_AirportId",
                 table: "Flight",
                 column: "AirportId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flight_DestinationId",
+                table: "Flight",
+                column: "DestinationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flight_OriginId",
+                table: "Flight",
+                column: "OriginId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flight_PilotId",
@@ -191,13 +223,7 @@ namespace FlightInfo.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "City");
-
-            migrationBuilder.DropTable(
                 name: "FlightPassenger");
-
-            migrationBuilder.DropTable(
-                name: "Country");
 
             migrationBuilder.DropTable(
                 name: "Flight");
@@ -209,7 +235,13 @@ namespace FlightInfo.Migrations
                 name: "Plane");
 
             migrationBuilder.DropTable(
+                name: "City");
+
+            migrationBuilder.DropTable(
                 name: "Person");
+
+            migrationBuilder.DropTable(
+                name: "Country");
         }
     }
 }

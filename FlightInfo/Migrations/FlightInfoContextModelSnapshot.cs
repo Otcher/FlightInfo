@@ -26,7 +26,7 @@ namespace FlightInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CityId")
+                    b.Property<int?>("CityId")
                         .HasColumnType("int");
 
                     b.Property<double>("Latitude")
@@ -42,6 +42,8 @@ namespace FlightInfo.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.ToTable("Airport");
                 });
 
@@ -51,9 +53,6 @@ namespace FlightInfo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AirportId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
@@ -96,13 +95,13 @@ namespace FlightInfo.Migrations
                     b.Property<DateTime>("DepartureTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DestinationAirportId")
+                    b.Property<int?>("DestinationId")
                         .HasColumnType("int");
 
                     b.Property<string>("FlightNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OriginAirportId")
+                    b.Property<int?>("OriginId")
                         .HasColumnType("int");
 
                     b.Property<int?>("PilotId")
@@ -114,6 +113,10 @@ namespace FlightInfo.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AirportId");
+
+                    b.HasIndex("DestinationId");
+
+                    b.HasIndex("OriginId");
 
                     b.HasIndex("PilotId");
 
@@ -209,6 +212,15 @@ namespace FlightInfo.Migrations
                     b.HasDiscriminator().HasValue("Pilot");
                 });
 
+            modelBuilder.Entity("FlightInfo.Models.Airport", b =>
+                {
+                    b.HasOne("FlightInfo.Models.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
+
+                    b.Navigation("City");
+                });
+
             modelBuilder.Entity("FlightInfo.Models.City", b =>
                 {
                     b.HasOne("FlightInfo.Models.Country", "Country")
@@ -224,6 +236,14 @@ namespace FlightInfo.Migrations
                         .WithMany("FlightTable")
                         .HasForeignKey("AirportId");
 
+                    b.HasOne("FlightInfo.Models.Airport", "Destination")
+                        .WithMany()
+                        .HasForeignKey("DestinationId");
+
+                    b.HasOne("FlightInfo.Models.Airport", "Origin")
+                        .WithMany()
+                        .HasForeignKey("OriginId");
+
                     b.HasOne("FlightInfo.Models.Pilot", "Pilot")
                         .WithMany("FlightHistory")
                         .HasForeignKey("PilotId");
@@ -231,6 +251,10 @@ namespace FlightInfo.Migrations
                     b.HasOne("FlightInfo.Models.Plane", "Plane")
                         .WithMany()
                         .HasForeignKey("PlaneId");
+
+                    b.Navigation("Destination");
+
+                    b.Navigation("Origin");
 
                     b.Navigation("Pilot");
 

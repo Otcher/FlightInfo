@@ -12,11 +12,11 @@ namespace FlightInfo.Models
         public int Id { get; set; }
 
         public string FlightNumber { get; set; }
-        [ForeignKey("Airport")]
-        public int OriginAirportId { get; set; }
+        //[ForeignKey("Airport")]
+        public Airport Origin { get; set; }
 
-        [ForeignKey("Airport")]
-        public int DestinationAirportId { get; set; }
+        //[ForeignKey("Airport")]
+        public Airport Destination { get; set; }
 
         public Pilot Pilot { get; set; }
 
