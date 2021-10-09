@@ -145,6 +145,17 @@ namespace FlightInfo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Passengers/PassengersByAgeGroup
+        public IActionResult PassengersByAgeGroup()
+        {
+            var destinationAirportWithAge = from p in _context.Passenger
+                                            let age = (DateTime.Now.Date - p.Birthdate).TotalDays % 365 / 10
+                                            group p by age into ages
+                                            select new { Age = ages.Key, Count = ages.Count() };
+
+            return Json(destinationAirportWithAge.ToList());
+        }
+
         private bool PassengerExists(int id)
         {
             return _context.Passenger.Any(e => e.Id == id);
