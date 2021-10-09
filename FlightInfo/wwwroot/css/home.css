@@ -28,19 +28,7 @@
     width: 50%;
 }
 
-#global-covid19-data {
-    padding-left: 30px;
-    height: 70vh;
-    overflow-y: scroll;
-    font-size: 14px
-}
-
-    #global-covid19-data td {
-        padding: 3px;
-        vertical-align: middle;
-    }
-
-#patients-by-hospital-graph, #patients-by-doctor-graph {
+#age-group-graph {
     height: 60vh;
 }
 
