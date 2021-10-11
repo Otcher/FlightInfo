@@ -24,7 +24,7 @@
         method: "GET",
         url: "/Passengers/PassengersByAgeGroup",
         success: function (data) {
-            alert("success");
+            createPassengerByAgeGroupGraph(data);
         },
         error: function (data) {
             alert("error!");
