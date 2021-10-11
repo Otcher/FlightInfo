@@ -148,12 +148,11 @@ namespace FlightInfo.Controllers
         // GET: Passengers/PassengersByAgeGroup
         public IActionResult PassengersByAgeGroup()
         {
-            var destinationAirportWithAge = from p in _context.Passenger
-                                            let age = (DateTime.Now.Date - p.Birthdate).TotalDays % 365 / 10
-                                            group p by age into ages
-                                            select new { Age = ages.Key, Count = ages.Count() };
+            var groupedAges = _context.Passenger
+                .Where(p => p.Birthdate != null).GroupBy(p => ((DateTime.Now.Date - p.Birthdate).Days / 365) / 10)
+                .Select(g => new { GroupIndex = g.Key, Count = g.Count() });
 
-            return Json(destinationAirportWithAge.ToList());
+            return Json(groupedAges.ToList());
         }
 
         private bool PassengerExists(int id)
