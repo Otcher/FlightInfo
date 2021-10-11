@@ -149,10 +149,10 @@ namespace FlightInfo.Controllers
         public IActionResult PassengersByAgeGroup()
         {
             var groupedAges = _context.Passenger
-                .Where(p => p.Birthdate != null).GroupBy(p => ((DateTime.Now.Date - p.Birthdate).Days / 365) / 10)
+                .Where(p => p.Birthdate != null).GroupBy(p => (DateTime.Now.Date - p.Birthdate).Days / 365 / 10)
                 .Select(g => new { GroupIndex = g.Key, Count = g.Count() });
 
-            return Json(groupedAges.ToList());
+            return Json(groupedAges);
         }
 
         private bool PassengerExists(int id)
