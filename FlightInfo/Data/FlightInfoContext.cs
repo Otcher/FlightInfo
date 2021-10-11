@@ -19,6 +19,10 @@ namespace FlightInfo.Data
             modelBuilder.Entity<Airport>().HasMany(a => a.FlightTable);
             modelBuilder.Entity<Flight>().HasOne(f => f.Origin);
             modelBuilder.Entity<Flight>().HasOne(a => a.Destination);
+            modelBuilder.Entity<City>()
+            .HasOne(a => a.Airport)
+            .WithOne(b => b.City)
+            .HasForeignKey<Airport>(b => b.CityId);
         }
 
         public DbSet<Models.Airport> Airport { get; set; }

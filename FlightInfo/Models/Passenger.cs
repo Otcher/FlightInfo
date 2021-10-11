@@ -7,6 +7,6 @@ namespace FlightInfo.Models
 {
     public class Passenger: Person
     {
-        public IEnumerable<Flight> FlightHistory { get; set; }
+        public List<Flight> FlightHistory { get; set; }
     }
 }

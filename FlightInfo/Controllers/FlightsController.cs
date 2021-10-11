@@ -10,22 +10,22 @@ using FlightInfo.Models;
 
 namespace FlightInfo.Controllers
 {
-    public class PassengersController : Controller
+    public class FlightsController : Controller
     {
         private readonly FlightInfoContext _context;
 
-        public PassengersController(FlightInfoContext context)
+        public FlightsController(FlightInfoContext context)
         {
             _context = context;
         }
 
-        // GET: Passengers
+        // GET: Flights
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Passenger.ToListAsync());
+            return View(await _context.Flight.ToListAsync());
         }
 
-        // GET: Passengers/Details/5
+        // GET: Flights/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace FlightInfo.Controllers
                 return NotFound();
             }
 
-            var passenger = await _context.Passenger
+            var flight = await _context.Flight
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (passenger == null)
+            if (flight == null)
             {
                 return NotFound();
             }
 
-            return View(passenger);
+            return View(flight);
         }
 
-        // GET: Passengers/Create
+        // GET: Flights/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Passengers/Create
+        // POST: Flights/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Birthdate")] Passenger passenger)
+        public async Task<IActionResult> Create([Bind("Id,FlightNumber,DepartureTime")] Flight flight)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(passenger);
+                _context.Add(flight);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(passenger);
+            return View(flight);
         }
 
-        // GET: Passengers/Edit/5
+        // GET: Flights/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace FlightInfo.Controllers
                 return NotFound();
             }
 
-            var passenger = await _context.Passenger.FindAsync(id);
-            if (passenger == null)
+            var flight = await _context.Flight.FindAsync(id);
+            if (flight == null)
             {
                 return NotFound();
             }
-            return View(passenger);
+            return View(flight);
         }
 
-        // POST: Passengers/Edit/5
+        // POST: Flights/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Birthdate")] Passenger passenger)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FlightNumber,DepartureTime")] Flight flight)
         {
-            if (id != passenger.Id)
+            if (id != flight.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace FlightInfo.Controllers
             {
                 try
                 {
-                    _context.Update(passenger);
+                    _context.Update(flight);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PassengerExists(passenger.Id))
+                    if (!FlightExists(flight.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace FlightInfo.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(passenger);
+            return View(flight);
         }
 
-        // GET: Passengers/Delete/5
+        // GET: Flights/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,40 +124,30 @@ namespace FlightInfo.Controllers
                 return NotFound();
             }
 
-            var passenger = await _context.Passenger
+            var flight = await _context.Flight
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (passenger == null)
+            if (flight == null)
             {
                 return NotFound();
             }
 
-            return View(passenger);
+            return View(flight);
         }
 
-        // POST: Passengers/Delete/5
+        // POST: Flights/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var passenger = await _context.Passenger.FindAsync(id);
-            _context.Passenger.Remove(passenger);
+            var flight = await _context.Flight.FindAsync(id);
+            _context.Flight.Remove(flight);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Passengers/PassengersByAgeGroup
-        public IActionResult PassengersByAgeGroup()
+        private bool FlightExists(int id)
         {
-            var groupedAges = _context.Passenger
-                .Where(p => p.Birthdate != null).GroupBy(p => EF.Functions.DateDiffDay(p.Birthdate, DateTime.Today) / 365 / 10)
-                .Select(g => new { GroupIndex = g.Key, Count = g.Count() }).ToList();
-
-            return Json(groupedAges);
-        }
-
-        private bool PassengerExists(int id)
-        {
-            return _context.Passenger.Any(e => e.Id == id);
+            return _context.Flight.Any(e => e.Id == id);
         }
     }
 }

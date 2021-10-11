@@ -4,14 +4,16 @@ using FlightInfo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FlightInfo.Migrations
 {
     [DbContext(typeof(FlightInfoContext))]
-    partial class FlightInfoContextModelSnapshot : ModelSnapshot
+    [Migration("20211011180159_fixPilot")]
+    partial class fixPilot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +28,7 @@ namespace FlightInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CityId")
+                    b.Property<int?>("CityId")
                         .HasColumnType("int");
 
                     b.Property<double>("Latitude")
@@ -42,8 +44,7 @@ namespace FlightInfo.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId")
-                        .IsUnique();
+                    b.HasIndex("CityId");
 
                     b.ToTable("Airport");
                 });
@@ -174,7 +175,12 @@ namespace FlightInfo.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PilotId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PilotId");
 
                     b.ToTable("Plane");
                 });
@@ -194,21 +200,6 @@ namespace FlightInfo.Migrations
                     b.ToTable("FlightPassenger");
                 });
 
-            modelBuilder.Entity("PilotPlane", b =>
-                {
-                    b.Property<int>("PilotsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QualificationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PilotsId", "QualificationId");
-
-                    b.HasIndex("QualificationId");
-
-                    b.ToTable("PilotPlane");
-                });
-
             modelBuilder.Entity("FlightInfo.Models.Passenger", b =>
                 {
                     b.HasBaseType("FlightInfo.Models.Person");
@@ -226,10 +217,8 @@ namespace FlightInfo.Migrations
             modelBuilder.Entity("FlightInfo.Models.Airport", b =>
                 {
                     b.HasOne("FlightInfo.Models.City", "City")
-                        .WithOne("Airport")
-                        .HasForeignKey("FlightInfo.Models.Airport", "CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("CityId");
 
                     b.Navigation("City");
                 });
@@ -258,7 +247,7 @@ namespace FlightInfo.Migrations
                         .HasForeignKey("OriginId");
 
                     b.HasOne("FlightInfo.Models.Pilot", "Pilot")
-                        .WithMany()
+                        .WithMany("FlightHistory")
                         .HasForeignKey("PilotId");
 
                     b.HasOne("FlightInfo.Models.Plane", "Plane")
@@ -272,6 +261,13 @@ namespace FlightInfo.Migrations
                     b.Navigation("Pilot");
 
                     b.Navigation("Plane");
+                });
+
+            modelBuilder.Entity("FlightInfo.Models.Plane", b =>
+                {
+                    b.HasOne("FlightInfo.Models.Pilot", null)
+                        .WithMany("Qualification")
+                        .HasForeignKey("PilotId");
                 });
 
             modelBuilder.Entity("FlightPassenger", b =>
@@ -289,29 +285,16 @@ namespace FlightInfo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PilotPlane", b =>
-                {
-                    b.HasOne("FlightInfo.Models.Pilot", null)
-                        .WithMany()
-                        .HasForeignKey("PilotsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FlightInfo.Models.Plane", null)
-                        .WithMany()
-                        .HasForeignKey("QualificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FlightInfo.Models.Airport", b =>
                 {
                     b.Navigation("FlightTable");
                 });
 
-            modelBuilder.Entity("FlightInfo.Models.City", b =>
+            modelBuilder.Entity("FlightInfo.Models.Pilot", b =>
                 {
-                    b.Navigation("Airport");
+                    b.Navigation("FlightHistory");
+
+                    b.Navigation("Qualification");
                 });
 #pragma warning restore 612, 618
         }

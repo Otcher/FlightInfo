@@ -15,5 +15,7 @@ namespace FlightInfo.Models
         public string Name { get; set; }
 
         public Country Country { get; set; }
+
+        public Airport Airport { get; set; }
     }
 }

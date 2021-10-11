@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightInfo.Migrations
 {
     [DbContext(typeof(FlightInfoContext))]
-    [Migration("20211002121041_add-data")]
-    partial class adddata
+    [Migration("20211011180929_new")]
+    partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -210,6 +210,9 @@ namespace FlightInfo.Migrations
             modelBuilder.Entity("FlightInfo.Models.Pilot", b =>
                 {
                     b.HasBaseType("FlightInfo.Models.Person");
+
+                    b.Property<int>("shit")
+                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("Pilot");
                 });

@@ -13,5 +13,8 @@ namespace FlightInfo.Models
         public string Model { get; set; }
         public int Capacity { get; set; }
         public int CruiseSpeed { get; set; }
+
+        public List<Pilot> Pilots { get; set; }
+
     }
 }

@@ -20,7 +20,7 @@ namespace FlightInfo.Models
 
         public DateTime DepartureTime { get; set; }
 
-        public IEnumerable<Passenger> PassengerManifest { get; set; }
+        public List<Passenger> PassengerManifest { get; set; }
 
         public Plane Plane { get; set; }
     }

@@ -17,9 +17,10 @@ namespace FlightInfo.Models
         [Display(Name = "Airport Name")]
         public string Name { get; set; }
 
+        public int CityId { get; set; }
         public City City { get; set; }
 
-        public IEnumerable<Flight> FlightTable { get; set; }
+        public List<Flight> FlightTable { get; set; }
 
         public double Latitude { get; set; }
 
