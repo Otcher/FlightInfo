@@ -20,7 +20,7 @@
         }
     });
 
-/*    $.ajax({
+    $.ajax({
         method: "GET",
         url: "/Passengers/PassengersByAgeGroup",
         success: function (data) {
@@ -29,7 +29,7 @@
         error: function (data) {
             alert("error!");
         }
-    });*/
+    });
 });
 
 
