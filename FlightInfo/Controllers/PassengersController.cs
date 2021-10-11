@@ -145,6 +145,16 @@ namespace FlightInfo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Passengers/PassengersByAgeGroup
+        public IActionResult PassengersByAgeGroup()
+        {
+            var groupedAges = _context.Passenger
+                .Where(p => p.Birthdate != null).GroupBy(p => (DateTime.Now.Date - p.Birthdate).Days / 365 / 10)
+                .Select(g => new { GroupIndex = g.Key, Count = g.Count() }).ToList();
+
+            return Json(groupedAges);
+        }
+
         private bool PassengerExists(int id)
         {
             return _context.Passenger.Any(e => e.Id == id);
