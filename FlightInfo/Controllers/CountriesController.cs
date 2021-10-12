@@ -184,9 +184,10 @@ namespace FlightInfo.Controllers
         public IActionResult AirpotsInCountries()
         {
             var AirpotsInCountries = from a in _context.Airport
-                    join c in _context.City
-                    on a.CityId equals c.Id
-                    select new { Country = c.Country.Name, Airport = a.Name };
+                                    join c in _context.City
+                                    on a.CityId equals c.Id
+                                    group a by c.Country.Name into g
+                                    select new { CountryName = g.Key, AirportsCount = g.Count() };
 
             return Json(AirpotsInCountries.ToList());
         }
