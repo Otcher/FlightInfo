@@ -22,11 +22,8 @@ namespace FlightInfo.Controllers
         // GET: Pilots
         public async Task<IActionResult> Index(string searchStringFirstName, string searchStringLastName)
         {
-<<<<<<< HEAD
             ViewData["IsAdmin"] = IsAdmin();
 
-            return View(await _context.Pilot.ToListAsync());
-=======
             ViewData["FirstNameFilter"] = searchStringFirstName;
             ViewData["LastNameFilter"] = searchStringLastName;
 
@@ -41,7 +38,6 @@ namespace FlightInfo.Controllers
                 pilots = pilots.Where(p => p.LastName.Contains(searchStringLastName));
             }
             return View(await pilots.ToListAsync());
->>>>>>> 1646e65 (added search for a few models)
         }
 
         // GET: Pilots/Details/5
