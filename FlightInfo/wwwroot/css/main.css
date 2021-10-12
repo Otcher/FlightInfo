@@ -3,3 +3,17 @@
     margin-right: 2% !important;
     width: 95%;
 }
+
+.card {
+    border: none;
+    box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 3%;
+}
+
+#navbar.container {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
