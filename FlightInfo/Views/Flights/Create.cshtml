@@ -18,9 +18,30 @@
                 <span asp-validation-for="FlightNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Origin" class="control-label"></label>
+                <select asp-for="Origin" class="form-control" asp-items="ViewBag.Airports"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Destination" class="control-label"></label>
+                <select asp-for="Destination" class="form-control" asp-items="ViewBag.Airports"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pilot" class="control-label"></label>
+                <select asp-for="Pilot" class="form-control" asp-items="ViewBag.Pilots"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plane" class="control-label"></label>
+                <select asp-for="Plane" class="form-control" asp-items="ViewBag.Planes"></select>
+            </div>
+            <div class="form-group">
                 <label asp-for="DepartureTime" class="control-label"></label>
                 <input asp-for="DepartureTime" class="form-control" />
                 <span asp-validation-for="DepartureTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerManifest" class="control-label"></label>
+                <select asp-for="PassengerManifest" class="form-control" asp-items="ViewBag.Passengers" multiple>
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
