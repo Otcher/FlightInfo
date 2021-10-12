@@ -34,52 +34,45 @@
 
 
 function createPassengerByAgeGroupGraph(data) {
-    height = 500;
-    width = 500;
+    var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        width = 500 - margin.left - margin.right,
+        height = 580 - margin.top - margin.bottom
 
-    margin = ({ top: 30, right: 0, bottom: 30, left: 40 })
-
-    x = d3.scaleBand()
-        .domain(data.map(d => parseInt(d.age) * 10 + "-" + parseInt(d.age) + parseInt(9, 10)))
-        .rangeRound([margin.left, width - margin.right])
+    // set the ranges
+    var x = d3.scaleBand()
+        .range([0, width])
         .padding(0.1)
 
-    y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.count)]).nice()
-        .range([height - margin.bottom, margin.top])
+    var y = d3.scaleLinear()
+        .range([height, 0])
 
+    var svg = d3.select("#age-group-graph").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")")
 
-    xAxis = g => g
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(x).tickFormat(i => i).tickSizeOuter(0))
+    x.domain(data.map(d => d.age + "-" + Number(d.age * 10 + +9)))
+    y.domain([0, d3.max(data, function (d) { return d.count; })])
 
-    yAxis = g => g
-        .attr("transform", `translate(${margin.left},0)`)
-        .call(d3.axisLeft(y).ticks(null, data.format))
-        .call(g => g.select(".domain").remove())
-        .call(g => g.append("text")
-            .attr("x", -margin.left)
-            .attr("y", 10)
-            .attr("fill", "currentColor")
-            .attr("text-anchor", "start"));
-
-
-    const svg = d3.select("#age-group-graph")
-        .attr("viewBox", [0, 0, width, height]);
-
-    svg.append("g")
-        .attr("fill", "aliceblue")
-        .selectAll("rect")
+    svg.selectAll(".bar")
         .data(data)
-        .join("rect")
-        .attr("x", d => x(d.age))
-        .attr("y", d => y(d.count))
-        .attr("height", d => y(0) - y(d.count))
-        .attr("width", x.bandwidth());
+        .enter().append("rect")
+        .attr("x", function (d) { return x(d.age); })
+        .attr("width", x.bandwidth())
+        .attr("y", function (d) { return y(d.count); })
+        .attr("height", function (d) { return height - y(d.count); })
+        .attr("fill", "aliceblue")
 
-    svg.append("g")
-        .call(xAxis);
 
+    // add the x Axis
     svg.append("g")
-        .call(yAxis);
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // add the y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
 }
