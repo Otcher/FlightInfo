@@ -20,11 +20,19 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Countries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchStringName)
         {
             ViewData["IsAdmin"] = IsAdmin();
 
-            return View(await _context.Country.ToListAsync());
+            ViewData["NameFilter"] = searchStringName;
+
+            var countries = from c in _context.Country
+                           select c;
+            if (!String.IsNullOrEmpty(searchStringName))
+            {
+                countries = countries.Where(c => c.Name.Contains(searchStringName));
+            }
+            return View(await countries.ToListAsync());
         }
 
         // GET: Countries/Details/5

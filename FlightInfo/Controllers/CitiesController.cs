@@ -23,8 +23,6 @@ namespace FlightInfo.Controllers
         // GET: Cities
         public async Task<IActionResult> Index()
         {
-            ViewData["IsAdmin"] = IsAdmin();
-
             var cities =  _context.City.Include(c => c.Country);
             return View(await cities.ToListAsync());
         }

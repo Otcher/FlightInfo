@@ -12,6 +12,18 @@
         <a asp-action="Create">Create New</a>
     }
 </p>
+<form asp-action="Index" method="get">
+    <div class="row">
+        <div class="col col-3">
+            <input type="text" class="form-control" name="SearchStringName" value="@ViewData["NameFilter"]" placeholder="Name" />
+        </div>
+        <div class="col col-3">
+            <input type="submit" class="btn btn-outline-info" data-toggle="tooltip" data-placement="top" value="Search" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </div>
+    </div>
+</form>
+<br />
 <table class="table">
     <thead>
         <tr>

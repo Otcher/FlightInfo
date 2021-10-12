@@ -20,11 +20,24 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Passengers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchStringFirstName, string searchStringLastName)
         {
             ViewData["IsAdmin"] = IsAdmin();
 
-            return View(await _context.Passenger.ToListAsync());
+            ViewData["FirstNameFilter"] = searchStringFirstName;
+            ViewData["LastNameFilter"] = searchStringLastName;
+
+            var passengers = from p in _context.Passenger
+                         select p;
+            if (!String.IsNullOrEmpty(searchStringFirstName))
+            {
+                passengers = passengers.Where(p => p.FirstName.Contains(searchStringFirstName));
+            }
+            if (!String.IsNullOrEmpty(searchStringLastName))
+            {
+                passengers = passengers.Where(p => p.LastName.Contains(searchStringLastName));
+            }
+            return View(await passengers.ToListAsync());
         }
 
         // GET: Passengers/Details/5

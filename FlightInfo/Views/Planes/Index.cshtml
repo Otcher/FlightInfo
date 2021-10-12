@@ -12,6 +12,27 @@
         <a asp-action="Create">Create New</a>
     }
 </p>
+<form asp-action="Index" method="get">
+    <div class="row">
+        <div class="col col-2">
+            <input type="text" class="form-control" name="SearchStringManufacturer" value="@ViewData["ManufacturerFilter"]" placeholder="Manufacturer" />
+        </div>
+        <div class="col col-2">
+            <input type="text" class="form-control" name="SearchStringModel" value="@ViewData["ModelFilter"]" placeholder="Model" />
+        </div>
+        <div class="col col-2">
+            <input type="number" class="form-control" name="SearchStringCapacity" value="@ViewData["CapacityFilter"]" placeholder="Capacity" />
+        </div>
+        <div class="col col-2">
+            <input type="number" class="form-control" name="SearchStringCruiseSpeed" value="@ViewData["CruiseSpeedFilter"]" placeholder="Cruise Speed" />
+        </div>
+        <div class="col col-3">
+            <input type="submit" class="btn btn-outline-info" data-toggle="tooltip" data-placement="top" value="Search" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </div>
+    </div>
+</form>
+<br />
 <table class="table">
     <thead>
         <tr>
@@ -31,6 +52,7 @@
         </tr>
     </thead>
     <tbody>
+<<<<<<< HEAD
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -55,5 +77,29 @@
             </td>
         </tr>
 }
+=======
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manufacturer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CruiseSpeed)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+>>>>>>> 1646e65 (added search for a few models)
     </tbody>
 </table>

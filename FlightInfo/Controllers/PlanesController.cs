@@ -20,11 +20,34 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Planes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SearchStringManufacturer, string SearchStringModel, int? SearchStringCapacity, int? SearchStringCruiseSpeed)
         {
             ViewData["IsAdmin"] = IsAdmin();
 
-            return View(await _context.Plane.ToListAsync());
+            ViewData["ManufacturerFilter"] = SearchStringManufacturer;
+            ViewData["ModelFilter"] = SearchStringModel;
+            ViewData["CapacityFilter"] = SearchStringCapacity;
+            ViewData["CruiseSpeedFilter"] = SearchStringCruiseSpeed;
+
+            var planes = from p in _context.Plane
+                         select p;
+            if (!String.IsNullOrEmpty(SearchStringManufacturer))
+            {
+                planes = planes.Where(p => p.Manufacturer.Contains(SearchStringManufacturer));
+            }
+            if (!String.IsNullOrEmpty(SearchStringModel))
+            {
+                planes = planes.Where(p => p.Model.Contains(SearchStringModel));
+            }
+            if (SearchStringCapacity.HasValue)
+            {
+                planes = planes.Where(p => p.Capacity.ToString().Contains(SearchStringCapacity.ToString()));
+            }
+            if (SearchStringCruiseSpeed.HasValue)
+            {
+                planes = planes.Where(p => p.CruiseSpeed.ToString().Contains(SearchStringCruiseSpeed.ToString()));
+            }
+            return View(await planes.ToListAsync());
         }
 
         // GET: Planes/Details/5
