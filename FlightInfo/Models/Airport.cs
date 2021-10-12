@@ -20,8 +20,6 @@ namespace FlightInfo.Models
         public int CityId { get; set; }
         public City City { get; set; }
 
-        public List<Flight> FlightTable { get; set; }
-
         public double Latitude { get; set; }
 
         public double Longtitude { get; set; }

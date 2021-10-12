@@ -16,7 +16,6 @@ namespace FlightInfo.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Airport>().HasMany(a => a.FlightTable);
             modelBuilder.Entity<Flight>().HasOne(f => f.Origin);
             modelBuilder.Entity<Flight>().HasOne(a => a.Destination);
             modelBuilder.Entity<City>()
