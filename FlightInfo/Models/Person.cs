@@ -21,6 +21,8 @@ namespace FlightInfo.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        public string FullName => $"{FirstName} {LastName}";
+
         [DataType(DataType.Date)]
         [Column(TypeName = "date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]

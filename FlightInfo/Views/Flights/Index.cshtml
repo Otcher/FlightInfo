@@ -21,6 +21,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.DepartureTime)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Origin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destination)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Plane)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -34,12 +43,27 @@
                 @Html.DisplayFor(modelItem => item.DepartureTime)
             </td>
             <td>
+<<<<<<< HEAD
                 @if (@ViewBag.IsAdmin)
                 {
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 }
+=======
+                @Html.DisplayFor(modelItem => item.Origin.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Destination.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Plane.Model)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+>>>>>>> 08e8e4e (Add flight views)
             </td>
         </tr>
 }

@@ -22,9 +22,20 @@ namespace FlightInfo.Controllers
         // GET: Flights
         public async Task<IActionResult> Index()
         {
+<<<<<<< HEAD
             ViewData["IsAdmin"] = IsAdmin();
 
             return View(await _context.Flight.ToListAsync());
+=======
+            var planes = await _context.Flight
+                .Include(f => f.Plane)
+                .Include(f => f.Destination)
+                .Include(f => f.Origin)
+                .Include(f => f.Plane)
+                .ToListAsync();
+
+            return View(planes);
+>>>>>>> 08e8e4e (Add flight views)
         }
 
         // GET: Flights/Details/5
@@ -41,7 +52,14 @@ namespace FlightInfo.Controllers
             }
 
             var flight = await _context.Flight
-                .FirstOrDefaultAsync(m => m.Id == id);
+                    .Include(f => f.Plane)
+                    .Include(f => f.Destination)
+                    .Include(f => f.Origin)
+                    .Include(f => f.Plane)
+                    .Include(f => f.Pilot)
+                    .Include(f => f.PassengerManifest)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
             if (flight == null)
             {
                 return NotFound();
@@ -51,13 +69,20 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Flights/Create
-        public IActionResult Create()
+        public async Task<ViewResult> Create()
         {
+<<<<<<< HEAD
             if (!IsAdmin())
             {
                 return RedirectToAction("Index", "Home");
             }
 
+=======
+            ViewBag.Airports = new SelectList(_context.Airport, "Id", "Name");
+            ViewBag.Pilots = new SelectList(_context.Pilot, "Id", "FullName");
+            ViewBag.Planes = new SelectList(_context.Plane, "Id", "Model");
+            ViewBag.Passengers = new SelectList(_context.Passenger, "Id", "FullName");
+>>>>>>> 08e8e4e (Add flight views)
             return View();
         }
 
@@ -66,8 +91,18 @@ namespace FlightInfo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FlightNumber,DepartureTime")] Flight flight)
+        public async Task<IActionResult> Create([Bind("Id,FlightNumber,DepartureTime")] Flight flight, int Origin, int Destination, int Pilot, int Plane, int[] PassengerManifest)
         {
+            flight.Origin = _context.Airport.First(p => p.Id == Origin);
+            flight.Destination = _context.Airport.First(p => p.Id == Destination);
+            flight.Pilot = _context.Pilot.First(p => p.Id == Pilot);
+            flight.Plane = _context.Plane.First(p => p.Id == Plane);
+            
+            flight.PassengerManifest ??= new List<Passenger>();
+            flight.PassengerManifest.AddRange(_context.Passenger
+                .Where(p => PassengerManifest.Contains(p.Id))
+                .ToList());
+
             if (ModelState.IsValid)
             {
                 _context.Add(flight);
@@ -90,11 +125,25 @@ namespace FlightInfo.Controllers
                 return NotFound();
             }
 
-            var flight = await _context.Flight.FindAsync(id);
+            var flight = await _context.Flight
+                .Include(f => f.Plane)
+                .Include(f => f.Destination)
+                .Include(f => f.Origin)
+                .Include(f => f.Plane)
+                .Include(f => f.Pilot)
+                .Include(f => f.PassengerManifest)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (flight == null)
             {
                 return NotFound();
             }
+
+            ViewBag.Airports = new SelectList(_context.Airport, "Id", "Name");
+            ViewBag.Pilots = new SelectList(_context.Pilot, "Id", "FullName");
+            ViewBag.Planes = new SelectList(_context.Plane, "Id", "Model");
+            ViewBag.Passengers = await _context.Passenger.ToListAsync();
+
             return View(flight);
         }
 
@@ -103,12 +152,23 @@ namespace FlightInfo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FlightNumber,DepartureTime")] Flight flight)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FlightNumber,DepartureTime")] Flight flight, int Origin, int Destination, int Pilot, int Plane, int[] PassengerManifest)
         {
             if (id != flight.Id)
             {
                 return NotFound();
             }
+
+            flight.Origin = _context.Airport.First(p => p.Id == Origin);
+            flight.Destination = _context.Airport.First(p => p.Id == Destination);
+            flight.Pilot = _context.Pilot.First(p => p.Id == Pilot);
+            flight.Plane = _context.Plane.First(p => p.Id == Plane);
+
+            flight.PassengerManifest ??= new List<Passenger>();
+            flight.PassengerManifest?.Clear();
+            flight.PassengerManifest.AddRange(_context.Passenger
+                .Where(p => PassengerManifest.Contains(p.Id))
+                .ToList());
 
             if (ModelState.IsValid)
             {
