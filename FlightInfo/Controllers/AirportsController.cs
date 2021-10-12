@@ -56,12 +56,16 @@ namespace FlightInfo.Controllers
         // GET: Airports/Create
         public IActionResult Create()
         {
+<<<<<<< HEAD
             if (!IsAdmin())
             {
                 return RedirectToAction("Index", "Home");
             }
 
             ViewData["Cities"] = new SelectList(_context.City, "Id", "Name");
+=======
+            ViewData["Cities"] = new SelectList(_context.City.Where(c => c.Airport == null), "Id", "Name");
+>>>>>>> 1a0bbc6 (Fixed many things)
             return View();
         }
 
@@ -76,9 +80,17 @@ namespace FlightInfo.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Add(airport);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(airport);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    return Content("Unable to create");
+                }
+                
             }
             ViewData["Id"] = new SelectList(_context.City, "Id", "Id", airport.Id);
             return View(airport);
@@ -102,7 +114,7 @@ namespace FlightInfo.Controllers
             {
                 return NotFound();
             }
-            ViewData["Id"] = new SelectList(_context.City, "Id", "Id", airport.Id);
+            ViewBag.Cities = new SelectList(_context.City.Where(c => c.Airport == null || c.Id == airport.CityId), "Id", "Name", airport.CityId);
             return View(airport);
         }
 
@@ -111,12 +123,14 @@ namespace FlightInfo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Latitude,Longtitude")] Airport airport)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,City,Latitude,Longtitude")] Airport airport, int CityId)
         {
             if (id != airport.Id)
             {
                 return NotFound();
             }
+
+            airport.CityId = CityId;
 
             if (ModelState.IsValid)
             {

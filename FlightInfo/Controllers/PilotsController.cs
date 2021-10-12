@@ -117,11 +117,17 @@ namespace FlightInfo.Controllers
                 return NotFound();
             }
 
-            var pilot = await _context.Pilot.FindAsync(id);
+            var pilot = await _context.Pilot
+                .Include(p => p.Qualification)
+                .FirstAsync(p => p.Id == id);
+
             if (pilot == null)
             {
                 return NotFound();
             }
+
+            ViewBag.Planes = await _context.Plane.ToListAsync();
+
             return View(pilot);
         }
 
@@ -130,12 +136,18 @@ namespace FlightInfo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Birthdate")] Pilot pilot)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Birthdate,Qualification")] Pilot pilot, int[] qualifications)
         {
             if (id != pilot.Id)
             {
                 return NotFound();
             }
+
+            pilot.Qualification ??= new List<Plane>();
+            pilot.Qualification.Clear();
+            _context.Update(pilot);
+            await _context.SaveChangesAsync();
+            pilot.Qualification.AddRange(_context.Plane.Where(p => qualifications.Contains(p.Id)).ToList());
 
             if (ModelState.IsValid)
             {
