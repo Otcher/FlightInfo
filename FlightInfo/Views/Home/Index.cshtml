@@ -16,12 +16,16 @@
                 <div class="card" id="graphs">
                     <nav class="card-header">
                         <div class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-airports-to-countries" data-toggle="tab" href="#airports-to-countries-statistics" role="tab" aria-controls="airports-to-countries-statistics" aria-selected="true">Airport Count by Country</a>
+                            <a class="nav-item nav-link active" id="age-distribution" data-toggle="tab" href="#age-distribution-statistics" role="tab" aria-controls="age-distribution-statistics" aria-selected="true">Age Distribution</a>
+                            <a class="nav-item nav-link" id="nav-airports-to-countries" data-toggle="tab" href="#airports-to-countries-statistics" role="tab" aria-controls="airports-to-countries-statistics" aria-selected="false">Airport Count by Country</a>
                             <a class="nav-item nav-link" id="nav-flight-to-countries" data-toggle="tab" href="#flight-to-countries-statistics" role="tab" aria-controls="flight-to-countries-statistics" aria-selected="false">Flight Count per Country</a>
                         </div>
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="airports-to-countries-statistics" role="tabpanel" aria-labelledby="nav-airports-to-countries-tab">
+                        <div class="tab-pane fade show active" id="age-distribution-statistics" role="tabpanel" aria-labelledby="age-distribution-tab">
+                            <svg id="age-distribution-graph"></svg>
+                        </div>
+                        <div class="tab-pane fade" id="airports-to-countries-statistics" role="tabpanel" aria-labelledby="nav-airports-to-countries-tab">
                             <svg id="airport-country-graph"></svg>
                         </div>
                         <div class="tab-pane fade" id="flight-to-countries-statistics" role="tabpanel" aria-labelledby="nav-flight-to-countries-tab">

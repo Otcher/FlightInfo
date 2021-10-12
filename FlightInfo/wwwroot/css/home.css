@@ -44,6 +44,11 @@
     height: 60vh;
 }
 
+svg {
+    height: 580px;
+    width:500px;
+}
+
 svg g {
     font-size: 13px;
     font-weight: bold;

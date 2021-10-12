@@ -22,6 +22,17 @@
 
     $.ajax({
         method: "GET",
+        url: "/Passengers/PassengersByAgeGroup",
+        success: function (data) {
+            createPassengerByAgeGroupGraph(data);
+        },
+        error: function (data) {
+            alert("error!");
+        }
+    });
+
+    $.ajax({
+        method: "GET",
         url: "/Countries/AirpotsInCountries",
         success: function (data) {
             airportsInCountriesCountGraph(data);
@@ -43,6 +54,49 @@
     });
 });
 
+function createPassengerByAgeGroupGraph(data) {
+    var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        width = 500 - margin.left - margin.right,
+        height = 580 - margin.top - margin.bottom
+
+    // set the ranges
+    var x = d3.scaleBand()
+        .range([0, width])
+        .padding(0.1)
+
+    var y = d3.scaleLinear()
+        .range([height, 0])
+
+    var svg = d3.select("#age-distribution-graph").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")")
+
+    x.domain(data.map(d => d.age * 10 + "-" + Number(d.age * 10 + +9)))
+    y.domain([0, d3.max(data, function (d) { return d.count; })])
+
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("x", function (d) { return x(d.age * 10 + "-" + Number(d.age * 10 + +9)); })
+        .attr("width", x.bandwidth())
+        .attr("y", function (d) { return y(d.count); })
+        .attr("height", function (d) { return height - y(d.count); })
+        .attr("fill", "aliceblue")
+
+
+    // add the x Axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // add the y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+}
 
 function getFlightByCountryCountGraph(data) {
     var width = 500
