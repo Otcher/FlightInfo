@@ -195,13 +195,13 @@ namespace FlightInfo.Controllers
         // GET: Countries/FlightsToCountries
         public IActionResult FlightsToCountries()
         {
-            var AirpotsInCountries = from f in _context.Flight
+            var FlightsToCountries = from f in _context.Flight
                                      join c in _context.City
                                      on f.Destination.CityId equals c.Id
                                      group f by c.Country.Name into g
                                      select new { CountryName = g.Key, FlightsCount = g.Count() };
 
-            return Json(AirpotsInCountries.ToList());
+            return Json(FlightsToCountries.ToList());
         }
     }
 }
