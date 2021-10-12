@@ -21,9 +21,24 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Cities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SearchStringName, string SearchStringCountry)
         {
-            var cities =  _context.City.Include(c => c.Country);
+            ViewData["IsAdmin"] = IsAdmin();
+
+            ViewData["NameFilter"] = SearchStringName;
+            ViewData["CountryFilter"] = SearchStringCountry;
+
+            var cities = from c in _context.City.Include(c => c.Country)
+                         select c;
+            if (!String.IsNullOrEmpty(SearchStringName))
+            {
+                cities = cities.Where(c => c.Name.Contains(SearchStringName));
+            }
+
+            if (!String.IsNullOrEmpty(SearchStringCountry))
+            {
+                cities = cities.Where(c => c.Country.Name.Contains(SearchStringCountry));
+            }
             return View(await cities.ToListAsync());
         }
 
