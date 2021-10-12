@@ -156,6 +156,7 @@ namespace FlightInfo.Controllers
 
             var country = await _context.Country
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (country == null)
             {
                 return NotFound();
@@ -169,9 +170,17 @@ namespace FlightInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var country = await _context.Country.FindAsync(id);
-            _context.Country.Remove(country);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var country = await _context.Country.FindAsync(id);
+                _context.Country.Remove(country);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return Content("Unable to delete");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
