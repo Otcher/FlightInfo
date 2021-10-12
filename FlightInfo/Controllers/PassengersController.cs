@@ -190,7 +190,7 @@ namespace FlightInfo.Controllers
 
             var groupedAges = _context.Passenger
                 .Where(p => p.Birthdate != null).GroupBy(p => EF.Functions.DateDiffDay(p.Birthdate, DateTime.Today) / 365 / 10)
-                .Select(g => new { GroupIndex = g.Key, Count = g.Count() }).ToList();
+                .Select(g => new { Age = g.Key, Count = g.Count() }).ToList();
 
             return Json(groupedAges);
         }

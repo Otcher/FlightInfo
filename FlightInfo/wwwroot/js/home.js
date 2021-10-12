@@ -35,18 +35,19 @@
 
 function createPassengerByAgeGroupGraph(data) {
     height = 500;
-    width - 500;
+    width = 500;
 
     margin = ({ top: 30, right: 0, bottom: 30, left: 40 })
 
     x = d3.scaleBand()
-        .domain(data.map(d => d.age))
-        .rangeBound([margin.left, width - margin.right])
+        .domain(data.map(d => parseInt(d.age) * 10 + "-" + parseInt(d.age) + parseInt(9, 10)))
+        .rangeRound([margin.left, width - margin.right])
         .padding(0.1)
 
     y = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.count)]).nice()
         .range([height - margin.bottom, margin.top])
+
 
     xAxis = g => g
         .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -67,13 +68,12 @@ function createPassengerByAgeGroupGraph(data) {
         .attr("viewBox", [0, 0, width, height]);
 
     svg.append("g")
-        .attr("fill", "cadetblue")
+        .attr("fill", "aliceblue")
         .selectAll("rect")
         .data(data)
         .join("rect")
-        .attr("x", d => x(d.hospitalName))
+        .attr("x", d => x(d.age))
         .attr("y", d => y(d.count))
-        .attr("height", d => y(0) - y(d.count))
         .attr("height", d => y(0) - y(d.count))
         .attr("width", x.bandwidth());
 
