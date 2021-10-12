@@ -10,7 +10,7 @@ using FlightInfo.Models;
 
 namespace FlightInfo.Controllers
 {
-    public class PlanesController : Controller
+    public class PlanesController : BaseController
     {
         private readonly FlightInfoContext _context;
 
@@ -22,6 +22,8 @@ namespace FlightInfo.Controllers
         // GET: Planes
         public async Task<IActionResult> Index()
         {
+            ViewData["IsAdmin"] = IsAdmin();
+
             return View(await _context.Plane.ToListAsync());
         }
 
@@ -46,6 +48,11 @@ namespace FlightInfo.Controllers
         // GET: Planes/Create
         public IActionResult Create()
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -68,6 +75,11 @@ namespace FlightInfo.Controllers
         // GET: Planes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -119,6 +131,11 @@ namespace FlightInfo.Controllers
         // GET: Planes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();

@@ -10,7 +10,7 @@ using FlightInfo.Models;
 
 namespace FlightInfo.Controllers
 {
-    public class PassengersController : Controller
+    public class PassengersController : BaseController
     {
         private readonly FlightInfoContext _context;
 
@@ -22,12 +22,19 @@ namespace FlightInfo.Controllers
         // GET: Passengers
         public async Task<IActionResult> Index()
         {
+            ViewData["IsAdmin"] = IsAdmin();
+
             return View(await _context.Passenger.ToListAsync());
         }
 
         // GET: Passengers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -68,6 +75,11 @@ namespace FlightInfo.Controllers
         // GET: Passengers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -119,6 +131,11 @@ namespace FlightInfo.Controllers
         // GET: Passengers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -148,6 +165,11 @@ namespace FlightInfo.Controllers
         // GET: Passengers/PassengersByAgeGroup
         public IActionResult PassengersByAgeGroup()
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var groupedAges = _context.Passenger
                 .Where(p => p.Birthdate != null).GroupBy(p => EF.Functions.DateDiffDay(p.Birthdate, DateTime.Today) / 365 / 10)
                 .Select(g => new { GroupIndex = g.Key, Count = g.Count() }).ToList();

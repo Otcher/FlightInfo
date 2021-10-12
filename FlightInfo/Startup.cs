@@ -28,6 +28,12 @@ namespace FlightInfo
 
             services.AddDbContext<FlightInfoContext>(options => 
                                 options.UseSqlServer(Configuration.GetConnectionString("FlightInfoContext")));
+
+            services.AddMvc();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +48,8 @@ namespace FlightInfo
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseRouting();
 

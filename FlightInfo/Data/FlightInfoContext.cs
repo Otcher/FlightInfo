@@ -41,5 +41,6 @@ namespace FlightInfo.Data
 
         public DbSet<Models.Plane> Plane { get; set; }
 
+        public DbSet<Models.User> User { get; set; }
     }
 }

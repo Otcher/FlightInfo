@@ -10,7 +10,7 @@ using FlightInfo.Models;
 
 namespace FlightInfo.Controllers
 {
-    public class AirportsController : Controller
+    public class AirportsController : BaseController
     {
         private readonly FlightInfoContext _context;
 
@@ -22,13 +22,21 @@ namespace FlightInfo.Controllers
         // GET: Airports
         public async Task<IActionResult> Index()
         {
+            ViewData["IsAdmin"] = IsAdmin();
+
             var flightInfoContext = _context.Airport.Include(a => a.City);
+
             return View(await flightInfoContext.ToListAsync());
         }
 
         // GET: Airports/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -48,6 +56,11 @@ namespace FlightInfo.Controllers
         // GET: Airports/Create
         public IActionResult Create()
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewData["Cities"] = new SelectList(_context.City, "Id", "Name");
             return View();
         }
@@ -74,6 +87,11 @@ namespace FlightInfo.Controllers
         // GET: Airports/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -127,6 +145,11 @@ namespace FlightInfo.Controllers
         // GET: Airports/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (id == null)
             {
                 return NotFound();
