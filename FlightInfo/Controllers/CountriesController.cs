@@ -179,5 +179,16 @@ namespace FlightInfo.Controllers
         {
             return _context.Country.Any(e => e.Id == id);
         }
+
+        // GET: Countries/AirpotsInCountries
+        public IActionResult AirpotsInCountries()
+        {
+            var AirpotsInCountries = from a in _context.Airport
+                    join c in _context.City
+                    on a.CityId equals c.Id
+                    select new { Country = c.Country.Name, Airport = a.Name };
+
+            return Json(AirpotsInCountries.ToList());
+        }
     }
 }
