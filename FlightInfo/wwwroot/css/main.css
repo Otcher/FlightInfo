@@ -1,4 +1,18 @@
-﻿#body-container {
+﻿@font-face {
+    font-family: "poppings";
+    src: url("../lib/fonts/poppings/Poppins-Regular.ttf");
+}
+
+@font-face {
+    font-family: "roboto";
+    src: url("../lib/fonts/roboto/Roboto-Regular.ttf");
+}
+
+body {
+    font-family: roboto;
+}
+
+#body-container {
     margin-left: 2% !important;
     margin-right: 2% !important;
     width: 95%;
