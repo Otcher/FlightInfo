@@ -53,13 +53,13 @@ function createPassengerByAgeGroupGraph(data) {
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")")
 
-    x.domain(data.map(d => d.age*10 + "-" + Number(d.age * 10 + +9 )))
+    x.domain(data.map(d => d.age * 10 + "-" + Number(d.age * 10 + +9 )))
     y.domain([0, d3.max(data, function (d) { return d.count; })])
 
     svg.selectAll(".bar")
         .data(data)
         .enter().append("rect")
-        .attr("x", function (d) { return x(d.age); })
+        .attr("x", function (d) { return x(d.age * 10 + "-" + Number(d.age * 10 + +9)); })
         .attr("width", x.bandwidth())
         .attr("y", function (d) { return y(d.count); })
         .attr("height", function (d) { return height - y(d.count); })
