@@ -66,6 +66,11 @@ namespace FlightInfo.Controllers
         // GET: Passengers/Create
         public IActionResult Create()
         {
+            if (!IsAdmin())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
