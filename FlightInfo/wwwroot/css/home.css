@@ -35,10 +35,10 @@
     font-size: 14px
 }
 
-    #global-covid19-data td {
-        padding: 3px;
-        vertical-align: middle;
-    }
+#global-covid19-data td {
+    padding: 3px;
+    vertical-align: middle;
+}
 
 #age-group-graph {
     height: 60vh;

@@ -14,7 +14,20 @@
         <div id="statistics-section" class="row">
             <div id="statistics-graph" class="card">
                 <div class="card" id="graphs">
-                    <svg id="age-group-graph"></svg>
+                    <nav class="card-header">
+                        <div class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-airports-to-countries" data-toggle="tab" href="#airports-to-countries-statistics" role="tab" aria-controls="airports-to-countries-statistics" aria-selected="true">Airport Count by Country</a>
+                            <a class="nav-item nav-link" id="nav-flight-to-countries" data-toggle="tab" href="#flight-to-countries-statistics" role="tab" aria-controls="flight-to-countries-statistics" aria-selected="false">Flight Count per Country</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="airports-to-countries-statistics" role="tabpanel" aria-labelledby="nav-airports-to-countries-tab">
+                            <svg id="airport-country-graph"></svg>
+                        </div>
+                        <div class="tab-pane fade" id="flight-to-countries-statistics" role="tabpanel" aria-labelledby="nav-flight-to-countries-tab">
+                            <svg id="flight-country-graph"></svg>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="statistics" class="card">
