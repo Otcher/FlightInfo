@@ -56,16 +56,14 @@ namespace FlightInfo.Controllers
         // GET: Airports/Create
         public IActionResult Create()
         {
-<<<<<<< HEAD
+
             if (!IsAdmin())
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewData["Cities"] = new SelectList(_context.City, "Id", "Name");
-=======
             ViewData["Cities"] = new SelectList(_context.City.Where(c => c.Airport == null), "Id", "Name");
->>>>>>> 1a0bbc6 (Fixed many things)
+
             return View();
         }
 

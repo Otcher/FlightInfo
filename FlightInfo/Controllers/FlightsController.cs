@@ -22,11 +22,8 @@ namespace FlightInfo.Controllers
         // GET: Flights
         public async Task<IActionResult> Index()
         {
-<<<<<<< HEAD
             ViewData["IsAdmin"] = IsAdmin();
 
-            return View(await _context.Flight.ToListAsync());
-=======
             var planes = await _context.Flight
                 .Include(f => f.Plane)
                 .Include(f => f.Destination)
@@ -35,7 +32,6 @@ namespace FlightInfo.Controllers
                 .ToListAsync();
 
             return View(planes);
->>>>>>> 08e8e4e (Add flight views)
         }
 
         // GET: Flights/Details/5
@@ -69,20 +65,17 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Flights/Create
-        public async Task<ViewResult> Create()
+        public async Task<IActionResult> Create()
         {
-<<<<<<< HEAD
             if (!IsAdmin())
             {
                 return RedirectToAction("Index", "Home");
             }
 
-=======
             ViewBag.Airports = new SelectList(_context.Airport, "Id", "Name");
             ViewBag.Pilots = new SelectList(_context.Pilot, "Id", "FullName");
             ViewBag.Planes = new SelectList(_context.Plane, "Id", "Model");
             ViewBag.Passengers = new SelectList(_context.Passenger, "Id", "FullName");
->>>>>>> 08e8e4e (Add flight views)
             return View();
         }
 
