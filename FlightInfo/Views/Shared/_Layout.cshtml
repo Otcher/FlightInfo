@@ -11,7 +11,12 @@
 </head>
 <body>
     <header>
+        @if(!String.IsNullOrEmpty(ViewBag.Error)){
+            @:<script type="text/javascript">alert('@ViewBag.Error')</script>
+        }
+
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom" id="main-nav">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom">
             <div class="container" id="navbar">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FlightInfo</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -47,7 +52,7 @@
                     </ul>
                 </div>
                  <div class="loginButton">
-                    @if (!@ViewBag.IsAdmin)
+                    @if (@ViewBag.IsAdmin == null || !@ViewBag.IsAdmin)
                     {
                         <button type="button" class="btn btn-round btn-info"
                                 data-toggle="modal" data-target="#loginModal">
@@ -56,7 +61,7 @@
                     }
                     else
                     {
-                        <button class="btn btn-block btn-round"
+                        <button class="btn btn-info btn-round"
                                 onclick="location.href='@Url.Action("Logout", "Users")'">
                             Logout
                         </button>

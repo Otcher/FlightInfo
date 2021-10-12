@@ -27,13 +27,16 @@ namespace FlightInfo.Controllers
             if (user != null && user.Password == password)
             {
                 HttpContext.Session.Set("IsAdmin", System.Text.Encoding.UTF8.GetBytes("true"));
+
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 HttpContext.Session.Set("IsAdmin", System.Text.Encoding.UTF8.GetBytes("false"));
-            }
 
-            return RedirectToAction("Index", "Home");
+                ViewBag.Error = "Invalid username or password";
+                return View("~/Views/Home/Index.cshtml");
+            }
         }
 
         public async Task<IActionResult> Logout(string username, string password)
