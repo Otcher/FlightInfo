@@ -183,11 +183,6 @@ namespace FlightInfo.Controllers
         // GET: Passengers/PassengersByAgeGroup
         public IActionResult PassengersByAgeGroup()
         {
-            if (!IsAdmin())
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             var groupedAges = _context.Passenger
                 .Where(p => p.Birthdate != null).GroupBy(p => EF.Functions.DateDiffDay(p.Birthdate, DateTime.Today) / 365 / 10)
                 .Select(g => new { Age = g.Key, Count = g.Count() }).ToList();
