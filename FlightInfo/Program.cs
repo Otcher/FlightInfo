@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightInfo.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FlightInfo
 {
@@ -13,7 +15,28 @@ namespace FlightInfo
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            CreateDbIfNotExists(host);
+            host.Run();
+        }
+
+        private static void CreateDbIfNotExists(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<FlightInfoContext>();
+                    DbInitializer.Initialize(context);
+
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Error with DB opening");
+                }
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -11,7 +11,6 @@ namespace FlightInfo.Data
     {
         public FlightInfoContext (DbContextOptions<FlightInfoContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
