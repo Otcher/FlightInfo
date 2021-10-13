@@ -20,13 +20,35 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Airports
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SearchStringName, string SearchStringCity, double? SearchStringLatitude, double? SearchStringLongtitude)
         {
             ViewData["IsAdmin"] = IsAdmin();
 
-            var flightInfoContext = _context.Airport.Include(a => a.City);
+            ViewData["NameFilter"] = SearchStringName;
+            ViewData["CityFilter"] = SearchStringCity;
+            ViewData["LatitudeFilter"] = SearchStringLatitude;
+            ViewData["LongtitudeFilter"] = SearchStringLongtitude;
 
-            return View(await flightInfoContext.ToListAsync());
+            var airports = from a in _context.Airport.Include(a => a.City)
+                         select a;
+            if (!String.IsNullOrEmpty(SearchStringName))
+            {
+                airports = airports.Where(a => a.Name.Contains(SearchStringName));
+            }
+            if (!String.IsNullOrEmpty(SearchStringCity))
+            {
+                airports = airports.Where(a => a.City.Name.Contains(SearchStringCity));
+            }
+            if (SearchStringLatitude.HasValue)
+            {
+                airports = airports.Where(a => a.Latitude.ToString().Contains(SearchStringLatitude.ToString()));
+            }
+            if (SearchStringLongtitude.HasValue)
+            {
+                airports = airports.Where(a => a.Longtitude.ToString().Contains(SearchStringLongtitude.ToString()));
+            }
+
+            return View(await airports.ToListAsync());
         }
 
         // GET: Airports/Details/5

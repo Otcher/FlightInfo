@@ -20,18 +20,51 @@ namespace FlightInfo.Controllers
         }
 
         // GET: Flights
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SearchStringFlightNumber, DateTime? SearchStringDepartureTime, string SearchStringOrigin, string SearchStringDestination, string SearchStringPlane)
         {
             ViewData["IsAdmin"] = IsAdmin();
 
-            var planes = await _context.Flight
+            ViewData["FlightNumberFilter"] = SearchStringFlightNumber;
+            if (SearchStringDepartureTime.HasValue)
+            {
+                ViewData["DepartureTimeFilter"] = SearchStringDepartureTime.Value.ToString("yyyy-MM-dd"); ;
+
+            }
+            ViewData["OriginFilter"] = SearchStringOrigin;
+            ViewData["DestinationFilter"] = SearchStringDestination;
+            ViewData["PlaneFilter"] = SearchStringPlane;
+
+            var flights = from f in _context.Flight
                 .Include(f => f.Plane)
                 .Include(f => f.Destination)
                 .Include(f => f.Origin)
                 .Include(f => f.Plane)
-                .ToListAsync();
+                .Include(f => f.PassengerManifest)
+                          select f;
 
-            return View(planes);
+            if (!String.IsNullOrEmpty(SearchStringFlightNumber))
+            {
+                flights = flights.Where(f => f.FlightNumber.Contains(SearchStringFlightNumber));
+            }
+            if (SearchStringDepartureTime.HasValue)
+            {
+                flights = flights.Where(f => f.DepartureTime.Date.Equals(SearchStringDepartureTime.Value.Date));
+            }
+            if (!String.IsNullOrEmpty(SearchStringOrigin))
+            {
+                flights = flights.Where(f => f.Origin.Name.Contains(SearchStringOrigin));
+            }
+            if (!String.IsNullOrEmpty(SearchStringDestination))
+            {
+                flights = flights.Where(f => f.Destination.Name.Contains(SearchStringDestination));
+            }
+            if (!String.IsNullOrEmpty(SearchStringPlane))
+            {
+                flights = flights.Where(f => f.Plane.Model.Contains(SearchStringPlane));
+            }
+
+
+            return View(await flights.ToListAsync());
         }
 
         // GET: Flights/Details/5
