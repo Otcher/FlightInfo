@@ -140,17 +140,16 @@ namespace FlightInfo.Controllers
                 return NotFound();
             }
 
-            pilot.Qualification ??= new List<Plane>();
-            pilot.Qualification.Clear();
-            _context.Update(pilot);
-            await _context.SaveChangesAsync();
-            pilot.Qualification.AddRange(_context.Plane.Where(p => qualifications.Contains(p.Id)).ToList());
+            var dbPilot = _context.Pilot.Include(p => p.Qualification).Single(p => p.Id == id);
+
+            dbPilot.Qualification ??= new List<Plane>();
+            dbPilot.Qualification.Clear();
+            dbPilot.Qualification.AddRange(_context.Plane.Where(p => qualifications.Contains(p.Id)).ToList());
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(pilot);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

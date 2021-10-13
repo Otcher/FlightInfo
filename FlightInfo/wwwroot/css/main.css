@@ -23,6 +23,7 @@ body {
     transition-property: color, background-color;
     transition-duration: 0.5s;
     transition-timing-function: ease-out;
+    margin-right: 10px;
 }
 
 #main-nav .nav-item:hover, #main-nav .nav-item:focus {

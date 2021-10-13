@@ -149,14 +149,23 @@ namespace FlightInfo.Controllers
                 return NotFound();
             }
 
-            flight.Origin = _context.Airport.First(p => p.Id == Origin);
-            flight.Destination = _context.Airport.First(p => p.Id == Destination);
-            flight.Pilot = _context.Pilot.First(p => p.Id == Pilot);
-            flight.Plane = _context.Plane.First(p => p.Id == Plane);
+            var dbFlight = await _context.Flight
+                .Include(f => f.Plane)
+                .Include(f => f.Destination)
+                .Include(f => f.Origin)
+                .Include(f => f.Plane)
+                .Include(f => f.Pilot)
+                .Include(f => f.PassengerManifest)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            flight.PassengerManifest ??= new List<Passenger>();
-            flight.PassengerManifest?.Clear();
-            flight.PassengerManifest.AddRange(_context.Passenger
+            dbFlight.Origin = _context.Airport.First(p => p.Id == Origin);
+            dbFlight.Destination = _context.Airport.First(p => p.Id == Destination);
+            dbFlight.Pilot = _context.Pilot.First(p => p.Id == Pilot);
+            dbFlight.Plane = _context.Plane.First(p => p.Id == Plane);
+
+            dbFlight.PassengerManifest ??= new List<Passenger>();
+            dbFlight.PassengerManifest?.Clear();
+            dbFlight.PassengerManifest.AddRange(_context.Passenger
                 .Where(p => PassengerManifest.Contains(p.Id))
                 .ToList());
 
@@ -164,7 +173,6 @@ namespace FlightInfo.Controllers
             {
                 try
                 {
-                    _context.Update(flight);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
